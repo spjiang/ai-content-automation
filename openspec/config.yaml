@@ -1,0 +1,64 @@
+# OpenSpec 配置文件
+version: "2.0"
+
+project:
+  name: "AI Content Automation System"
+  description: "自动化内容生成与发布系统"
+  
+  # 技术栈定义
+  tech_stack:
+    backend:
+      language: "python"
+      version: "3.11"
+      framework: "fastapi"
+      async: true
+      
+    frontend:
+      language: "typescript"
+      version: "5.0"
+      framework: "react"
+      version: "18.0"
+      build_tool: "vite"
+      
+    database:
+      primary: "postgresql"
+      version: "15"
+      orm: "sqlalchemy"
+      migration: "alembic"
+      
+    message_queue:
+      broker: "rabbitmq"
+      version: "3.12"
+      framework: "celery"
+      
+    cache:
+      engine: "redis"
+      version: "7"
+      
+    container:
+      engine: "docker"
+      orchestration: "docker-compose"
+      
+  # 端口规划
+  ports:
+    backend: 8000
+    frontend: 5173
+    frontend_prod: 80
+    postgres: 5432
+    rabbitmq_amqp: 5672
+    rabbitmq_management: 15672
+    redis: 6379
+    celery_flower: 5555
+    pgadmin: 5050
+
+# 规范模板
+templates:
+  spec: "templates/spec.md.j2"
+  plan: "templates/plan.md.j2"
+  tasks: "templates/tasks.md.j2"
+
+# 验证规则
+validation:
+  enforce_type_hints: true
+  enforce_tests: true
+  max_task_duration_minutes: 30
