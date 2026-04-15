@@ -1,0 +1,16 @@
+---
+description: Python/FastAPI 后端编码与任务处理规范
+globs: **/*.py
+alwaysApply: false
+---
+
+# Backend Python Standards
+
+- 使用 Python 3.11 语法，新增或修改函数必须补全类型标注。
+- FastAPI 路由统一挂载在 `/api/v1`，请求/响应模型使用 Pydantic 定义。
+- 数据访问通过 SQLAlchemy；数据库结构变更仅允许 Alembic migration。
+- 写操作应显式事务化，避免跨服务分布式事务耦合。
+- 长耗时任务必须放入 Celery 队列，不在 API 请求内直接执行重任务。
+- Celery 任务必须可重试并考虑幂等，避免重复消费导致脏数据。
+- 异常处理禁止吞错；记录上下文日志后向上抛出业务化错误。
+- 测试至少覆盖核心业务路径，异步逻辑使用 `pytest-asyncio`。

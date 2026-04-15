@@ -1,0 +1,41 @@
+---
+description: 全局严格规则：SuperPowers + OpenSpec + Python/React 技术栈执行规范
+alwaysApply: true
+---
+
+# Core AI Standards (Strict)
+
+## 工作流与执行纪律
+
+- 始终遵循：需求澄清 -> 方案设计 -> 实施 -> 验证 -> 总结。
+- 涉及需求或范围变更时，先更新 OpenSpec 变更工件（proposal/design/tasks），再编码。
+- 未经用户明确要求，不执行高风险或破坏性命令（如 reset、force push、删除生产数据）。
+- 禁止伪造结果；所有“已完成/已通过”结论必须基于可验证证据。
+
+## 后端（Python/FastAPI）规范
+
+- Python 版本以 3.11 为基线，新增代码必须包含类型标注。
+- API 使用 FastAPI + Pydantic 模型，统一放在 `/api/v1` 路由前缀下。
+- 数据持久化以 PostgreSQL 为准，Schema 变更仅通过 Alembic migration。
+- 长耗时任务必须走 Celery + RabbitMQ，任务处理需考虑幂等与重试。
+
+## 前端（React/TypeScript）规范
+
+- React 使用函数式组件与 Hooks，禁止新增 class 组件。
+- TypeScript 开启严格类型思维，避免 `any`（若必须使用需说明原因与边界）。
+- 前端只通过后端 API 访问数据，不直接耦合数据库或消息队列。
+- UI 与业务逻辑分层：页面编排在 pages/routes，可复用逻辑下沉到 hooks/features。
+
+## Docker 与环境规范
+
+- 本地默认运行方式为 Docker Compose，服务名保持稳定（backend/frontend/postgres/rabbitmq/redis/worker）。
+- 本地开发环境必须采用 volume 挂载（bind mount），确保代码与配置变更可实时生效。
+- 配置通过环境变量注入，禁止在代码中硬编码密钥、连接串、令牌。
+- 新增服务需提供健康检查与最小可运行说明（端口、依赖、启动顺序）。
+
+## 测试与质量门禁
+
+- 后端至少覆盖关键业务路径的 pytest；异步逻辑使用 pytest-asyncio。
+- 前端组件与交互使用 Vitest + React Testing Library 覆盖核心场景。
+- 提交前默认执行 lint/test（Python: ruff/black/isort/mypy；前端: eslint/prettier/vitest）。
+- 发现规则冲突时，优先级为：用户当前指令 > 安全约束 > OpenSpec > 本 rules。

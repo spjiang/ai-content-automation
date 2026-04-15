@@ -9,16 +9,18 @@ project:
   tech_stack:
     backend:
       language: "python"
-      version: "3.11"
+      python_version: "3.11"
       framework: "fastapi"
+      framework_version: "0.115"
       async: true
       
     frontend:
       language: "typescript"
-      version: "5.0"
+      language_version: "5.0"
       framework: "react"
-      version: "18.0"
+      framework_version: "18.0"
       build_tool: "vite"
+      package_manager: "pnpm"
       
     database:
       primary: "postgresql"
@@ -38,6 +40,47 @@ project:
     container:
       engine: "docker"
       orchestration: "docker-compose"
+
+  # 架构约束（供 OpenSpec 变更设计时引用）
+  architecture:
+    style: "backend-for-frontend + async-jobs"
+    backend_structure:
+      - "api (FastAPI routers)"
+      - "application (use-cases/services)"
+      - "domain (entities & business rules)"
+      - "infrastructure (db/mq/external adapters)"
+    frontend_structure:
+      - "pages/routes"
+      - "features"
+      - "shared (components/hooks/utils)"
+    integration_rules:
+      - "Frontend only accesses backend via REST API"
+      - "Long-running tasks must use Celery + RabbitMQ"
+      - "All persistent business data must be stored in PostgreSQL"
+      - "Compose is the default local runtime environment"
+      - "Service-to-service config via environment variables only"
+
+  # 开发规范（供 OpenSpec proposal/design/tasks 统一约束）
+  standards:
+    backend:
+      lint: ["ruff", "black", "isort"]
+      typing: "mypy --strict"
+      testing: ["pytest", "pytest-asyncio"]
+    frontend:
+      lint: ["eslint", "prettier"]
+      testing: ["vitest", "react-testing-library"]
+    api:
+      standard: "OpenAPI 3.1"
+      versioning: "path-versioning (/api/v1)"
+    data:
+      migration: "alembic only"
+      transaction_policy: "write operations must be transactional"
+    queue:
+      retry_policy: "exponential-backoff"
+      idempotency_required: true
+    container:
+      required_services: ["backend", "frontend", "postgres", "rabbitmq", "redis", "worker"]
+      healthcheck_required: true
       
   # 端口规划
   ports:

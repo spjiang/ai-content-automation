@@ -1,0 +1,13 @@
+---
+description: Git 协作与提交质量规则
+alwaysApply: true
+---
+
+# Git Collaboration Standards
+
+- 新功能与修复使用分支开发，禁止直接在主分支上进行长期开发。
+- 提交应小步、可回滚，单次 commit 聚焦单一意图。
+- Commit message 建议使用规范化前缀：`feat`、`fix`、`refactor`、`test`、`docs`。
+- 未经明确授权，不执行破坏性 git 操作（如 `reset --hard`、强制推送）。
+- 提交前至少通过对应模块的 lint 与测试，避免把失败状态推给他人。
+- 代码评审意见需要逐条处理或给出技术说明，不做无依据忽略。

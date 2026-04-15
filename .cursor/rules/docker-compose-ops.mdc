@@ -1,0 +1,14 @@
+---
+description: Docker Compose 本地运行与挂载约束
+globs: "**/docker-compose*.yml"
+alwaysApply: false
+---
+
+# Docker Compose Standards
+
+- 本地开发默认使用 Docker Compose，不直接依赖宿主机裸运行服务。
+- 开发态服务必须使用 volume 挂载（bind mount）保证代码热更新。
+- 关键服务需配置 `healthcheck`，并为依赖关系设置合理启动顺序。
+- 服务名保持稳定且语义清晰：`backend`、`frontend`、`postgres`、`rabbitmq`、`redis`、`worker`。
+- 配置优先由环境变量注入，禁止在 compose 文件中硬编码敏感信息。
+- 端口映射遵循项目统一端口约定，避免无文档新增暴露端口。

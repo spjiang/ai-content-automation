@@ -1,0 +1,15 @@
+---
+description: React/TypeScript 前端组件与类型规范
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend React Standards
+
+- 使用 React 函数组件与 Hooks，禁止新增 class 组件。
+- TypeScript 默认严格类型约束，避免 `any`；如必须使用需标注原因。
+- 页面负责组装，业务逻辑优先下沉到 `features` 与自定义 hooks。
+- 公共组件放入 `shared`，避免在业务页面重复实现相同 UI 逻辑。
+- 远程数据访问必须通过后端 API，禁止前端绕过后端直连数据库或队列。
+- 副作用逻辑集中管理（如请求、订阅、计时器），组件卸载时必须清理资源。
+- 关键交互与状态流需有 Vitest/RTL 覆盖，避免仅依赖手工回归。
