@@ -1,17 +1,17 @@
 ## 1. 仓库基线与运行环境
 
-- [ ] 1.1 初始化后端 FastAPI 工程目录结构（api/application/domain/infrastructure 分层、健康检查接口）
-- [ ] 1.2 初始化前端 React 18 + Vite + TypeScript 工程（pages/features/shared 骨架）
-- [ ] 1.3 编写 `docker-compose.yml`：backend、frontend、postgres、rabbitmq、redis、worker，开发态 bind mount 与 healthcheck
-- [ ] 1.4 提供 `.env.example`（含 DeepSeek key 占位、DB/MQ 连接串、超时与重试配置）与 README 启动说明
+- [x] 1.1 初始化后端 FastAPI 工程目录结构（api/application/domain/infrastructure 分层、健康检查接口）
+- [x] 1.2 初始化前端 React 18 + Vite + TypeScript 工程（pages/features/shared 骨架）
+- [x] 1.3 编写 `docker-compose.yml`：backend、frontend、postgres、rabbitmq、redis、worker，开发态 bind mount 与 healthcheck
+- [x] 1.4 提供 `.env.example`（含 DeepSeek key 占位、DB/MQ 连接串、超时与重试配置）与 README 启动说明
 
 ## 2. M1：数据入口（抓取 → 归一 → 规则 → 队列）
 
-- [ ] 2.1 Alembic 初始化：首版 migration 创建 `topic_raw`、`topic_canonical` 实体及必要索引
-- [ ] 2.2 定义 collector 插件接口（抽象基类/协议），实现三源占位 collector（结构完整，数据可 mock）
-- [ ] 2.3 实现 normalizer：字段清洗、指纹去重（规范化标题+关键词+时间窗）、热度归一与权重排序、TopN 配额输出
-- [ ] 2.4 实现 rule-engine：规则配置加载、黑白名单/关键词/敏感词/热度阈值过滤、命中明细持久化（含规则版本标识）
-- [ ] 2.5 Celery 任务入队：`content_job` 创建（状态 `QUEUED`）、按源退避重试、失败计数与告警钩子触发
+- [x] 2.1 Alembic 初始化：首版 migration 创建 `topic_raw`、`topic_canonical` 实体及必要索引
+- [x] 2.2 定义 collector 插件接口（抽象基类/协议），实现三源占位 collector（结构完整，数据可 mock）
+- [x] 2.3 实现 normalizer：字段清洗、指纹去重（规范化标题+关键词+时间窗）、热度归一与权重排序、TopN 配额输出
+- [x] 2.4 实现 rule-engine：规则配置加载、黑白名单/关键词/敏感词/热度阈值过滤、命中明细持久化（含规则版本标识）
+- [x] 2.5 Celery 任务入队：`content_job` 创建（状态 `QUEUED`）、按源退避重试、失败计数与告警钩子触发
 
 ## 3. M2：生成 → 审核 → 发布包（业务闭环）
 
