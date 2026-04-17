@@ -2,6 +2,7 @@
 
 import hashlib
 import re
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
@@ -71,6 +72,7 @@ def normalize(
         time_window_hours: 同一时间窗内才参与指纹去重。
         platform_weights: 各平台权重覆盖，默认使用 PLATFORM_WEIGHT。
     """
+    t0 = time.perf_counter()
     weights = platform_weights or PLATFORM_WEIGHT
     now = datetime.now(tz=timezone.utc)
     window_start = now - timedelta(hours=time_window_hours)
@@ -112,5 +114,6 @@ def normalize(
         input_count=len(raw_topics),
         groups=len(canonical_list),
         output_count=len(result),
+        duration_ms=round((time.perf_counter() - t0) * 1000, 2),
     )
     return result

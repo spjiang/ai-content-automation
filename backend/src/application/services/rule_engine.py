@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import re
-from dataclasses import dataclass, field
+import time
+from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any
 
@@ -28,6 +28,16 @@ class RuleHitDetail:
     action: RuleAction
     reason: str
     matched_value: Any = None
+
+
+def serialize_hit_details(hits: list[RuleHitDetail]) -> list[dict[str, Any]]:
+    """持久化 / API 用 JSON 列表。"""
+    out: list[dict[str, Any]] = []
+    for h in hits:
+        d = asdict(h)
+        d["action"] = h.action.value
+        out.append(d)
+    return out
 
 
 @dataclass
@@ -72,6 +82,7 @@ def apply_rules(
     5. 其余 → ALLOW
     最终按 top_n 截断。
     """
+    t0 = time.perf_counter()
     cfg = config or RuleConfig()
     all_results: list[RuleResult] = []
 
@@ -145,5 +156,6 @@ def apply_rules(
         input_count=len(topics),
         passed_count=len(passed_topics),
         rule_version=cfg.version,
+        duration_ms=round((time.perf_counter() - t0) * 1000, 2),
     )
     return passed_topics, all_results

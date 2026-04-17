@@ -10,20 +10,34 @@ from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy.dialects import postgresql
 
 revision: str = "0001"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
+# create_type=False 告知 SQLAlchemy 不要自动 CREATE TYPE，由下方 DO 块统一管理
+_PLATFORM_ENUM = postgresql.ENUM(
+    "weibo", "zhihu", "douyin",
+    name="platform",
+    create_type=False,  # 关键：禁止 create_table 事件触发自动建类型
+)
+
 
 def upgrade() -> None:
-    op.execute("CREATE TYPE platform AS ENUM ('weibo', 'zhihu', 'douyin')")
+    # 幂等创建 enum 类型：已存在则忽略，避免重复执行报错
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE platform AS ENUM ('weibo', 'zhihu', 'douyin');
+        EXCEPTION WHEN duplicate_object THEN null;
+        END $$;
+    """)
 
     op.create_table(
         "topic_raw",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.Column("platform", sa.Enum("weibo", "zhihu", "douyin", name="platform"), nullable=False),
+        sa.Column("platform", _PLATFORM_ENUM, nullable=False),
         sa.Column("title", sa.String(512), nullable=False),
         sa.Column("heat", sa.Float(), nullable=True),
         sa.Column("url", sa.Text(), nullable=True),

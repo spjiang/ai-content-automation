@@ -15,22 +15,22 @@
 
 ## 3. M2：生成 → 审核 → 发布包（业务闭环）
 
-- [ ] 3.1 Alembic migration：新增 `content_job`、`content_asset`（双平台版本行）、状态字段与状态机约束
-- [ ] 3.2 DeepSeek 客户端：HTTP 封装、超时/限流/内容安全错误分类、重试策略；读取 env 配置
-- [ ] 3.3 Worker 消费生成队列：执行 DeepSeek 调用、写入双平台 `content_asset`、状态迁移 `GENERATING`→`GENERATED`；幂等保障
-- [ ] 3.4 记录生成版本元数据：规则版本、提示词版本、平台模板版本写入 `content_job`，不可被后续操作覆盖
-- [ ] 3.5 Alembic migration：新增 `review_record`、`publish_package`（版本号、生成时间、有效期、可空效果字段、`download_url` 占位）
-- [ ] 3.6 审核 API：`POST /api/v1/review`（通过/驳回），状态迁移 `IN_REVIEW`→`APPROVED` 或 `REVISE_REQUIRED`；写入 `review_record`；支持修订后重新入队（新版本资产，不覆盖旧版）
-- [ ] 3.7 发布包生成：`APPROVED` 后打包为版本化结构化产出物，带唯一版本号防覆盖；打包失败可重试
-- [ ] 3.8 发布包导出/下载 API：`GET /api/v1/packages/{id}/download`（MVP 返回文件或本地路径，预留 `download_url` 字段）
-- [ ] 3.9 前端审核台：内容列表（状态筛选）、详情页（双平台稿件预览）、通过/驳回操作、发布包下载入口
+- [x] 3.1 Alembic migration：新增 `content_job`、`content_asset`（双平台版本行）、状态字段与状态机约束
+- [x] 3.2 DeepSeek 客户端：HTTP 封装、超时/限流/内容安全错误分类、重试策略；读取 env 配置
+- [x] 3.3 Worker 消费生成队列：执行 DeepSeek 调用、写入双平台 `content_asset`、状态迁移 `GENERATING`→`GENERATED`；幂等保障
+- [x] 3.4 记录生成版本元数据：规则版本、提示词版本、平台模板版本写入 `content_job`，不可被后续操作覆盖
+- [x] 3.5 Alembic migration：新增 `review_record`、`publish_package`（版本号、生成时间、有效期、可空效果字段、`download_url` 占位）
+- [x] 3.6 审核 API：`POST /api/v1/review`（通过/驳回），状态迁移 `IN_REVIEW`→`APPROVED` 或 `REVISE_REQUIRED`；写入 `review_record`；支持修订后重新入队（新版本资产，不覆盖旧版）
+- [x] 3.7 发布包生成：`APPROVED` 后打包为版本化结构化产出物，带唯一版本号防覆盖；打包失败可重试
+- [x] 3.8 发布包导出/下载 API：`GET /api/v1/packages/{id}/download`（MVP 返回文件或本地路径，预留 `download_url` 字段）
+- [x] 3.9 前端审核台：内容列表（状态筛选）、详情页（双平台稿件预览）、通过/驳回操作、发布包下载入口
 
 ## 4. M3：可运营性（监控、指标、工具）
 
-- [ ] 4.1 全链路结构化日志埋点：抓取、归一、规则、生成、审核、打包各阶段关键事件与耗时
-- [ ] 4.2 基础告警钩子：连续抓取失败、队列积压超阈值、生成失败率告警；健康聚合接口 `GET /api/v1/health`
-- [ ] 4.3 指标查询接口或导出：审核通过率（含一次通过率）、抓取/生成成功率、链路 P50/P90 最小可用集
-- [ ] 4.4 规则命中回放：只读查询 API，输入话题 id 可返回规则命中明细，支撑误杀/漏放排查
+- [x] 4.1 全链路结构化日志埋点：抓取、归一、规则、生成、审核、打包各阶段关键事件与耗时
+- [x] 4.2 基础告警钩子：连续抓取失败、队列积压超阈值、生成失败率告警；健康聚合接口 `GET /api/v1/health`
+- [x] 4.3 指标查询接口或导出：审核通过率（含一次通过率）、抓取/生成成功率、链路 P50/P90 最小可用集
+- [x] 4.4 规则命中回放：只读查询 API，输入话题 id 可返回规则命中明细，支撑误杀/漏放排查
 
 ## 5. 测试与质量门禁
 
